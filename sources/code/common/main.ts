@@ -119,9 +119,10 @@ let startHidden = false;
  */
 let screenShareAudio = false;
 
-export const pipewire = await (async () => {
+export const pipewire = (() => {
   try {
-    const pw = await import("node-pipewire");
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const pw = require("node-pipewire") as typeof import("node-pipewire");
     pw.createPwThread(argv.values.verbose === true);
     return pw;
   } catch(e) {
