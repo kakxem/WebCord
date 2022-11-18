@@ -43,7 +43,6 @@ import { getRecommendedGPUFlags, getRedommendedOSFlags } from "../main/modules/o
 import { styles } from "../main/modules/extensions";
 import { parseArgs } from "util";
 import { parseArgs as parseArgsPolyfill } from "@pkgjs/parseargs";
-import { createPwThread } from "node-pipewire";
 
 const argvConfig = Object.freeze({
   options: {
@@ -119,7 +118,18 @@ let startHidden = false;
  * **Might bring undesirable consequences on unsupported platforms**.
  */
 let screenShareAudio = false;
-createPwThread();
+
+export const pipewire = await (async () => {
+  try {
+    const pw = await import("node-pipewire");
+    pw.createPwThread(argv.values.verbose === true);
+    return pw;
+  } catch(e) {
+    console.warn(e);
+    return undefined;
+  }
+})();
+
 
 const userAgent: Partial<{
   replace: Parameters<typeof getUserAgent>[2];

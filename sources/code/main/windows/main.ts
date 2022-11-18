@@ -16,7 +16,6 @@ import {
   BrowserView,
   systemPreferences
 } from "electron/main";
-import { getInputNodes, getOutputNodesName, getLinks, linkNodesNameToId, unlinkPorts  } from "node-pipewire";
 import * as getMenu from "../modules/menu";
 import { discordFavicons, knownInstancesList } from "../../common/global";
 import packageJson from "../../common/modules/package";
@@ -28,6 +27,7 @@ import { commonCatches } from "../modules/error";
 import type { PartialRecursive } from "../../common/global";
 import { nativeImage } from "electron/common";
 import type { PipewireNode } from "node-pipewire/build/types";
+import { pipewire } from "../../common/main";
 
 const configData = new AppConfig();
 
@@ -49,9 +49,9 @@ export default function createMainWindow(flags:MainWindowFlags): BrowserWindow {
   let testAudioAttempts = 0;
   const testAudioInterval: NodeJS.Timeout = setInterval(() => {
     // get the actual input nodes from pipewire. 
-    const inputNodes = getInputNodes();
+    const inputNodes = pipewire?.getInputNodes();
     
-    if (inputNodes.length > 0) {
+    if (inputNodes?.length > 0) {
       //If the user is using a chromium based browser, and is using a microphone, it will be in the list of input nodes.
       const chromiumInputNodes = inputNodes.filter(node => node.name === "Chromium");
     
